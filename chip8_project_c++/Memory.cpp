@@ -1,15 +1,12 @@
 #include "Memory.h"
 #include <memory.h>
 
-#include <iostream> // DEBUG
-
 Memory::Memory() {
 	this->registers = new Register();
 	this->memory = new unsigned char[4096];
 	for (int i = 0; i < 4096; i++) {
 		memory[i] = 0;
 	}
-	printf("%x\n", memory[512]);
 
 	font = new unsigned char[80] {
 		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -31,7 +28,6 @@ Memory::Memory() {
 	};
 
 	memcpy(&memory[0], font, 80);
-	printf("%x\n", memory[512]);
 }
 
 Memory::~Memory() {
@@ -46,7 +42,6 @@ Memory::~Memory() {
 unsigned short Memory::fetchInstruction() {
 	unsigned short instruction = memory[registers->fetchPC()] << 8 | memory[registers->fetchPC() + 1];
 	unsigned short excuseme = registers->fetchPC();
-	std::cout << "fetchpc = " << excuseme << std::endl;
 	registers->incrementPC();
 	return instruction;
 }
