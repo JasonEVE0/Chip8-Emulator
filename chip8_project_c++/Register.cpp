@@ -23,3 +23,23 @@ unsigned short Register::fetchPC() {
 void Register::incrementPC() {
 	this->PC += 2;
 }
+
+// Set - 6XNN
+void Register::setRegister(unsigned short opcode) {
+	unsigned char x = (opcode >> 8) & 0x0f;
+	unsigned char nn = opcode & 0x00ff;
+	V[x] = nn;
+}
+
+// Add - 7XNN
+void Register::addRegister(unsigned short opcode) {
+	unsigned char x = (opcode >> 8) & 0x0f;
+	unsigned char nn = opcode & 0x00ff;
+	V[x] += nn;
+}
+
+// Set Index - ANNN
+void Register::setIndex(unsigned short opcode) {
+	unsigned short nnn = opcode & 0x0fff;
+	I = nnn;
+}

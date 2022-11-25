@@ -14,6 +14,7 @@ public:
 	void execute(unsigned short instruction);
 	void storeMemory(unsigned char* memory, int index, int size);
 	bool isPixelOn(int x, int y);
+	void jump(unsigned short opcode);
 private:
 	Memory *memory;
 	Display *display;

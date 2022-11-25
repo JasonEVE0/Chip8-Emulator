@@ -10,7 +10,7 @@ public:
 	~Memory();
 	unsigned short fetchInstruction();
 	unsigned char* getMemory(int index);
-private:
+
 	Register* registers;
 	unsigned char* memory;
 	unsigned char* font;

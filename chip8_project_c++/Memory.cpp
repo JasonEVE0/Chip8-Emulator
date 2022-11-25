@@ -41,8 +41,11 @@ Memory::~Memory() {
  */
 unsigned short Memory::fetchInstruction() {
 	unsigned short instruction = memory[registers->fetchPC()] << 8 | memory[registers->fetchPC() + 1];
-	unsigned short excuseme = registers->fetchPC();
-	registers->incrementPC();
+
+	if (instruction != 0) {
+		registers->incrementPC();
+	}
+
 	return instruction;
 }
 
