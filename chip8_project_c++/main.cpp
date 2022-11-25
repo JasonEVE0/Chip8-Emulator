@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <stdlib.h>
 #include <fstream>
+
 #include "Emulator.h"
 
 int main(int argc, char* argv[]) {
@@ -23,14 +24,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// load buffer into memory
-
-	// print the contents of the buffer
-	//for (int i = 0; i < size; i++) {
-	//	printf("%x\n", memoryBlock[i]);
-	//}
-
-	unsigned short ti = emulator->fetch();
-	printf("%x\n", ti);
+	emulator->storeMemory(memoryBlock, 512, size);
 
 	// Init SDL and create SDL window
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -40,6 +34,7 @@ int main(int argc, char* argv[]) {
 	SDL_Event* event = new SDL_Event();
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
+	// Event loop
 	while (running) {
 		SDL_PollEvent(event);
 
@@ -48,14 +43,29 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 1);
-		SDL_Rect* rect = new SDL_Rect();
-		rect->x = 50;
-		rect->y = 50;
-		rect->w = 10;
-		rect->h = 10;
+		// fetch instruction
+		unsigned short instruction = emulator->fetch();
 
-		SDL_RenderFillRect(renderer, rect);
+		// execute instruction
+		emulator->execute(instruction);
+
+		// draw the screen
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 1);
+		int scale = 10;
+		for (int x = 0; x < 64; x++) {
+			for (int y = 0; y < 32; y++) {
+				if (emulator->isPixelOn(x,y)){
+					SDL_Rect* pixel = new SDL_Rect();
+					pixel->x = x * scale;
+					pixel->y = y * scale;
+					pixel->w = scale;
+					pixel->h = scale;
+					SDL_RenderFillRect(renderer, pixel);
+				}
+			}
+		}
+
+		// render the screen
 		SDL_RenderPresent(renderer);
 	}
 

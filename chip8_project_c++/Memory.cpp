@@ -45,3 +45,7 @@ unsigned short Memory::fetchInstruction() {
 	registers->incrementPC();
 	return instruction;
 }
+
+unsigned char* Memory::getMemory(int index) {
+	return &this->memory[index];
+}
