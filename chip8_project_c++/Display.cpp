@@ -1,6 +1,5 @@
 #include "Display.h"
 
-
 Display::Display() {
 	clearScreen();
 }
@@ -12,8 +11,6 @@ Display::~Display() {
 void Display::setPixel(int x, int y, bool onoff) {
 	screen[x][y] = onoff;
 }
-
-
 
 bool Display::isPixelSet(int x, int y) {
 	return screen[x][y];
@@ -29,18 +26,18 @@ void Display::clearScreen() {
 }
 
 // Draw - DXYN
-void Display::draw(unsigned short opcode, Memory* memory) {
+void Display::draw(unsigned short opcode, Register* registers, Memory* memory) {
 	unsigned char x = (opcode >> 8) & 0xf; 
 	unsigned char y = (opcode >> 4) & 0xf;
 	unsigned char n = (opcode) & 0xf;
 
-	int xCoordinate = memory->getRegisters()->getV(x) % 64;
-	int yCoordinate = memory->getRegisters()->getV(y) % 32;
-	memory->getRegisters()->setV(0xf, 0);
+	int xCoordinate = registers->getV(x) % 64;
+	int yCoordinate = registers->getV(y) % 32;
+	registers->setV(0xf, 0);
 
 	for (int i = 0; i < n; i++) {
 		if (yCoordinate > 31) break;
-		unsigned char sprite = *memory->getMemory(memory->getRegisters()->getI() + i);
+		unsigned char sprite = memory->getMemoryCell(registers->getI() + i);
 		for (int j = 7; j >= 0; j--) {
 
 			if (xCoordinate > 63) break;
@@ -50,7 +47,7 @@ void Display::draw(unsigned short opcode, Memory* memory) {
 
 			if (bitOn && pixelOn) {
 				setPixel(xCoordinate, yCoordinate, false);
-				memory->getRegisters()->setV(0xf, 1);
+				registers->setV(0xf, 1);
 			}
 			else if (bitOn && !pixelOn) {
 				setPixel(xCoordinate, yCoordinate, true);

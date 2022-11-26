@@ -2,7 +2,6 @@
 #include <memory.h>
 
 Memory::Memory() {
-	this->registers = new Register();
 	this->memory = new unsigned char[4096];
 	for (int i = 0; i < 4096; i++) {
 		memory[i] = 0;
@@ -35,24 +34,10 @@ Memory::~Memory() {
 	delete[] this->font;
 }
 
-/*
- * Fetches the 16 bit instruciton from memory,
- * and increments the PC
- */
-unsigned short Memory::fetchInstruction() {
-	unsigned short instruction = memory[registers->fetchPC()] << 8 | memory[registers->fetchPC() + 1];
-
-	if (instruction != 0) {
-		registers->incrementPC();
-	}
-
-	return instruction;
+unsigned char Memory::getMemoryCell(int index) {
+	return this->memory[index];
 }
 
-unsigned char* Memory::getMemory(int index) {
-	return &this->memory[index];
-}
-
-Register* Memory::getRegisters() {
-	return this->registers;
+void Memory::storeMemory(unsigned char* programMemory, int index, int size) {
+	memcpy(&memory[index], programMemory, size);
 }

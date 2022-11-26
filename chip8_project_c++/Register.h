@@ -7,13 +7,13 @@ public:
 	~Register();
 	unsigned short fetchPC();
 	void incrementPC();
+	void setPC(unsigned short counter);
 	void setRegister(unsigned short opcode);
 	void addRegister(unsigned short opcode);
 	void setIndex(unsigned short opcode);
-	void setPC(unsigned short counter);
+	unsigned short getI();
 	void setV(unsigned char index, unsigned char value);
 	unsigned char getV(unsigned char index);
-	unsigned short getI();
 private:
 	unsigned short PC;
 	unsigned short I;

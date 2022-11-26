@@ -3,6 +3,7 @@
 
 #include "Memory.h"
 #include "Display.h"
+#include "Register.h"
 
 class Emulator
 {
@@ -15,8 +16,9 @@ public:
 	bool isPixelOn(int x, int y);
 private:
 	void jump(unsigned short opcode);
-	Memory *memory;
-	Display *display;
+	Memory* memory;
+	Register* registers;
+	Display* display;
 };
 
 #endif

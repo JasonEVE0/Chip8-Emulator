@@ -1,49 +1,60 @@
 #include "Emulator.h"
-#include <memory>
+#include <iostream>
 
 Emulator::Emulator() {
 	this->memory = new Memory();
 	this->display = new Display();
+	this->registers = new Register();
 }
 
 Emulator::~Emulator() {
 	delete this->memory;
 	delete this->display;
+	delete this->registers;
 }
 
-// fetch instruction from memory
+/*
+ * Fetches the 16 bit instruciton from memory,
+ * and increments the PC
+ */
 unsigned short Emulator::fetch() {
-	return memory->fetchInstruction();
+	unsigned short instruction = (memory->getMemoryCell(registers->fetchPC()) << 8) | memory->getMemoryCell(registers->fetchPC() + 1);
+
+	if (instruction != 0) {
+		registers->incrementPC();
+	}
+
+	return instruction;
 }
 
-// decode and execute instruction
+// Decode and execute the instruction
 void Emulator::execute(unsigned short instruction) {
 	switch (instruction & 0xf000) {
 		case 0x0000:
 			display->clearScreen();
 			break;
 		case 0xd000:
-			display->draw(instruction, memory);
+			display->draw(instruction, registers, memory);
 			break;
 		case 0x1000:
 			jump(instruction);
 			break;
 		case 0x6000:
-			memory->getRegisters()->setRegister(instruction);
+			registers->setRegister(instruction);
 			break;
 		case 0x7000:
-			memory->getRegisters()->addRegister(instruction);
+			registers->addRegister(instruction);
 			break;
 		case 0xa000:
-			memory->getRegisters()->setIndex(instruction);
+			registers->setIndex(instruction);
 			break;
 		default:
 			printf("unknown instruction: %x\n", instruction);
 	}
 }
 
-void Emulator::storeMemory(unsigned char* memory, int index, int size) {
-	memcpy(this->memory->getMemory(index), memory, size);
+void Emulator::storeMemory(unsigned char* destinationMemory, int index, int size) {
+	this->memory->storeMemory(destinationMemory, index, size);
 }
 
 bool Emulator::isPixelOn(int x, int y) {
@@ -52,6 +63,6 @@ bool Emulator::isPixelOn(int x, int y) {
 
 void Emulator::jump(unsigned short opcode) {
 	unsigned short value = (opcode) & 0x0fff;
-	memory->getRegisters()->setPC(value);
+	registers->setPC(value);
 }
 

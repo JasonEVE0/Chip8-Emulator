@@ -10,7 +10,7 @@ public:
 	void setPixel(int x, int y, bool onoff);
 	bool isPixelSet(int x, int y);
 	void clearScreen();
-	void draw(unsigned short opcode, Memory* memory);
+	void draw(unsigned short opcode, Register* registers, Memory* memory);
 private:
 	bool screen[64][32];
 };

@@ -8,11 +8,9 @@ class Memory
 public:
 	Memory();
 	~Memory();
-	unsigned short fetchInstruction();
-	unsigned char* getMemory(int index);
-	Register* getRegisters();
+	void storeMemory(unsigned char* programMemory, int index, int size);
+	unsigned char getMemoryCell(int index);
 private:
-	Register* registers;
 	unsigned char* memory;
 	unsigned char* font;
 };
