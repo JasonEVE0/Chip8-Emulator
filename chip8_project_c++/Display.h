@@ -1,8 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <string>
-#include <vector>
 #include "Memory.h"
 
 class Display {

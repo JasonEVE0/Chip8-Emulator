@@ -43,3 +43,19 @@ void Register::setIndex(unsigned short opcode) {
 	unsigned short nnn = opcode & 0x0fff;
 	I = nnn;
 }
+
+void Register::setPC(unsigned short counter) {
+	this->PC = counter;
+}
+
+void Register::setV(unsigned char index, unsigned char value) {
+	this->V[index] = value;
+}
+
+unsigned char Register::getV(unsigned char index) {
+	return this->V[index];
+}
+
+unsigned short Register::getI() {
+	return this->I;
+}

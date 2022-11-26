@@ -1,8 +1,6 @@
 #include "Emulator.h"
 #include <memory>
 
-#include <iostream>
-
 Emulator::Emulator() {
 	this->memory = new Memory();
 	this->display = new Display();
@@ -20,24 +18,24 @@ unsigned short Emulator::fetch() {
 
 // decode and execute instruction
 void Emulator::execute(unsigned short instruction) {
-	switch ((instruction >> 12) & 0xf) {
-		case 0x0:
+	switch (instruction & 0xf000) {
+		case 0x0000:
 			display->clearScreen();
 			break;
-		case 0xd:
+		case 0xd000:
 			display->draw(instruction, memory);
 			break;
-		case 0x1:
+		case 0x1000:
 			jump(instruction);
 			break;
-		case 0x6:
-			memory->registers->setRegister(instruction);
+		case 0x6000:
+			memory->getRegisters()->setRegister(instruction);
 			break;
-		case 0x7:
-			memory->registers->addRegister(instruction);
+		case 0x7000:
+			memory->getRegisters()->addRegister(instruction);
 			break;
-		case 0xa:
-			memory->registers->setIndex(instruction);
+		case 0xa000:
+			memory->getRegisters()->setIndex(instruction);
 			break;
 		default:
 			printf("unknown instruction: %x\n", instruction);
@@ -45,7 +43,7 @@ void Emulator::execute(unsigned short instruction) {
 }
 
 void Emulator::storeMemory(unsigned char* memory, int index, int size) {
-		memcpy(this->memory->getMemory(index), memory, size);
+	memcpy(this->memory->getMemory(index), memory, size);
 }
 
 bool Emulator::isPixelOn(int x, int y) {
@@ -54,6 +52,6 @@ bool Emulator::isPixelOn(int x, int y) {
 
 void Emulator::jump(unsigned short opcode) {
 	unsigned short value = (opcode) & 0x0fff;
-	memory->registers->PC = value + 2;
+	memory->getRegisters()->setPC(value);
 }
 

@@ -3,7 +3,6 @@
 
 #include "Memory.h"
 #include "Display.h"
-#include "Register.h"
 
 class Emulator
 {
@@ -14,8 +13,8 @@ public:
 	void execute(unsigned short instruction);
 	void storeMemory(unsigned char* memory, int index, int size);
 	bool isPixelOn(int x, int y);
-	void jump(unsigned short opcode);
 private:
+	void jump(unsigned short opcode);
 	Memory *memory;
 	Display *display;
 };

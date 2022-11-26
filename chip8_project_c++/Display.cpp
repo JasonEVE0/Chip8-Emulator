@@ -1,6 +1,5 @@
 #include "Display.h"
 
-#include <vector>
 
 Display::Display() {
 	clearScreen();
@@ -35,13 +34,13 @@ void Display::draw(unsigned short opcode, Memory* memory) {
 	unsigned char y = (opcode >> 4) & 0xf;
 	unsigned char n = (opcode) & 0xf;
 
-	int xCoordinate = memory->registers->V[x] % 64;
-	int yCoordinate = memory->registers->V[y] % 32;
-	memory->registers->V[0xf] = 0;
+	int xCoordinate = memory->getRegisters()->getV(x) % 64;
+	int yCoordinate = memory->getRegisters()->getV(y) % 32;
+	memory->getRegisters()->setV(0xf, 0);
 
 	for (int i = 0; i < n; i++) {
 		if (yCoordinate > 31) break;
-		unsigned char sprite = memory->memory[memory->registers->I + i];
+		unsigned char sprite = *memory->getMemory(memory->getRegisters()->getI() + i);
 		for (int j = 7; j >= 0; j--) {
 
 			if (xCoordinate > 63) break;
@@ -51,7 +50,7 @@ void Display::draw(unsigned short opcode, Memory* memory) {
 
 			if (bitOn && pixelOn) {
 				setPixel(xCoordinate, yCoordinate, false);
-				memory->registers->V[0xf] = 1;
+				memory->getRegisters()->setV(0xf, 1);
 			}
 			else if (bitOn && !pixelOn) {
 				setPixel(xCoordinate, yCoordinate, true);

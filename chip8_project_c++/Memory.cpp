@@ -52,3 +52,7 @@ unsigned short Memory::fetchInstruction() {
 unsigned char* Memory::getMemory(int index) {
 	return &this->memory[index];
 }
+
+Register* Memory::getRegisters() {
+	return this->registers;
+}
