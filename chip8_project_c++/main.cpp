@@ -43,6 +43,12 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 
+		// map real key to virtual key
+		if (event->type == SDL_KEYDOWN) {
+			char rKey = event->key.keysym.sym;
+			char vKey = emulator->convertKey(rKey);
+		}
+
 		// fetch instruction
 		unsigned short instruction = emulator->fetch();
 

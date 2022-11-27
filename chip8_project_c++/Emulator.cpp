@@ -5,12 +5,14 @@ Emulator::Emulator() {
 	this->memory = new Memory();
 	this->display = new Display();
 	this->registers = new Register();
+	this->keyboard = new Keyboard();
 }
 
 Emulator::~Emulator() {
 	delete this->memory;
 	delete this->display;
 	delete this->registers;
+	delete this->keyboard;
 }
 
 /*
@@ -31,7 +33,12 @@ unsigned short Emulator::fetch() {
 void Emulator::execute(unsigned short instruction) {
 	switch (instruction & 0xf000) {
 		case 0x0000:
-			display->clearScreen();
+			if ((instruction & 0xff) == 0xee){
+				returnFromSubroutine();
+			}
+			else if ((instruction & 0xff) == 0xe0) {
+				display->clearScreen();
+			}
 			break;
 		case 0xd000:
 			display->draw(instruction, registers, memory);
@@ -39,11 +46,26 @@ void Emulator::execute(unsigned short instruction) {
 		case 0x1000:
 			jump(instruction);
 			break;
+		case 0x2000:
+			jumpSubroutine(instruction);
+			break;
+		case 0x3000:
+			skip(instruction);
+			break;
+		case 0x4000:
+			skip(instruction);
+			break;
+		case 0x5000:
+			skip(instruction);
+			break;
 		case 0x6000:
 			registers->setRegister(instruction);
 			break;
 		case 0x7000:
 			registers->addRegister(instruction);
+			break;
+		case 0x9000:
+			skip(instruction);
 			break;
 		case 0xa000:
 			registers->setIndex(instruction);
@@ -64,5 +86,51 @@ bool Emulator::isPixelOn(int x, int y) {
 void Emulator::jump(unsigned short opcode) {
 	unsigned short value = (opcode) & 0x0fff;
 	registers->setPC(value);
+}
+
+char Emulator::convertKey(char key) {
+	return keyboard->convertRealToVirtual(key);
+}
+
+// 00EE - Return from subroutine
+void Emulator::returnFromSubroutine() {
+	registers->setPC(memory->peek());
+	memory->pop();
+}
+
+// 2NNN - Jump Subroutine
+void Emulator::jumpSubroutine(unsigned short opcode) {
+	unsigned short nnn = opcode & 0xfff;
+	memory->push(registers->fetchPC());
+	registers->setPC(nnn);
+}
+
+// 3XNN, 4XNN, 5XY0, 9XY0 - Skip
+void Emulator::skip(unsigned short opcode) {
+	unsigned short lead = (opcode >> 12) & 0xf;
+	unsigned short x = (opcode >> 8) & 0xf;
+
+	if (lead == 0x3 || lead == 0x4) {
+		unsigned short nn = (opcode) & 0xff;
+		if (registers->getV(x) == nn) {
+			// skip instruction 3XNN
+			return;
+		}
+		else {
+			// skip instruction 4XNN
+			return;
+		}
+	}
+	else if (lead == 0x5 || lead == 0x9) {
+		unsigned short y = (opcode >> 4) & 0xf;
+		if (registers->getV(x) == registers->getV(y)) {
+			// skip instruction 5XY0
+			return;
+		}
+		else {
+			// skip instruction 9XY0
+			return;
+		}
+	}
 }
 

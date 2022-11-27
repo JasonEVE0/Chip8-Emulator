@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Emulator.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Register.cpp" />
@@ -142,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Display.h" />
     <ClInclude Include="Emulator.h" />
+    <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Register.h" />
   </ItemGroup>

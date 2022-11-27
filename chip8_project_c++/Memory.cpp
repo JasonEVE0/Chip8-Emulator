@@ -3,6 +3,8 @@
 
 Memory::Memory() {
 	this->memory = new unsigned char[4096];
+	std::stack<unsigned short> stack;
+
 	for (int i = 0; i < 4096; i++) {
 		memory[i] = 0;
 	}
@@ -40,4 +42,16 @@ unsigned char Memory::getMemoryCell(int index) {
 
 void Memory::storeMemory(unsigned char* programMemory, int index, int size) {
 	memcpy(&memory[index], programMemory, size);
+}
+
+void Memory::push(unsigned short value) {
+	stack.push(value);
+}
+
+unsigned short Memory::peek() {
+	return stack.top();
+}
+
+void Memory::pop() {
+	stack.pop();
 }

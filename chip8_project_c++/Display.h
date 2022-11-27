@@ -2,6 +2,7 @@
 #define DISPLAY_H
 
 #include "Memory.h"
+#include "Register.h"
 
 class Display {
 public:
