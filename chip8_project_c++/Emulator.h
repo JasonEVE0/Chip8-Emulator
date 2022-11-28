@@ -22,6 +22,12 @@ private:
 	void returnFromSubroutine();
 	void jumpSubroutine(unsigned short opcode);
 	void skip(unsigned short opcode);
+	void set(unsigned short opcode);
+	void binaryOr(unsigned short opcode);
+	void binaryAnd(unsigned short opcode);
+	void binaryXor(unsigned short opcode);
+	void carryAdd(unsigned short opcode);
+	void subtract(unsigned short opcode);
 	Memory* memory;
 	Register* registers;
 	Display* display;

@@ -64,6 +64,23 @@ void Emulator::execute(unsigned short instruction) {
 		case 0x7000:
 			registers->addRegister(instruction);
 			break;
+		case 0x8000:
+			if ((instruction & 0xf) == 0){
+				set(instruction);
+			} else if ((instruction & 0xf) == 1) {
+				binaryOr(instruction);
+			} else if ((instruction & 0xf) == 2) {
+				binaryAnd(instruction);
+			} else if ((instruction & 0xf) == 3) {
+				binaryXor(instruction);
+			} else if ((instruction & 0xf) == 4) {
+				carryAdd(instruction);
+			} else if ((instruction & 0xf) == 5) {
+				carryAdd(instruction);
+			} else if ((instruction & 0xf) == 7) {
+				carryAdd(instruction);
+			}
+			break;
 		case 0x9000:
 			skip(instruction);
 			break;
@@ -134,3 +151,70 @@ void Emulator::skip(unsigned short opcode) {
 	}
 }
 
+// 8XY0 - Set
+void Emulator::set(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+	registers->setV(x, registers->getV(y));
+}
+
+// 8XY1 - Binary or
+void Emulator::binaryOr(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+	registers->setV(x, (registers->getV(x) | registers->getV(y)));
+}
+
+// 8XY2 - Binary and
+void Emulator::binaryAnd(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+	registers->setV(x, (registers->getV(x) & registers->getV(y)));
+}
+
+// 8XY3 - Binary xor
+void Emulator::binaryXor(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+	registers->setV(x, (registers->getV(x) ^ registers->getV(y)));
+}
+
+// 8XY4 - Add with carry
+void Emulator::carryAdd(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+
+	if (registers->getV(x) + registers->getV(y) > 255) {
+		registers->setV(0xf, 1);
+	}
+
+	registers->setV(x, ((registers->getV(x) + registers->getV(y)) % 256));
+}
+
+// 8XY5 and 8XY7 - Subtract
+void Emulator::subtract(unsigned short opcode) {
+	unsigned short trailing = (opcode & 0xf);
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+
+	if (trailing == 5) {
+		if (registers->getV(x) > registers->getV(y)) {
+			registers->setV(0xf, 1);
+		}
+		else if (registers->getV(x) < registers->getV(y)
+			&& registers->getV(x) - registers->getV(y) < 0) {
+			registers->setV(0xf, 0);
+		}
+		registers->setV(x, ((registers->getV(x) - registers->getV(y)) % 256));
+	}
+	else if (trailing == 7) {
+		if (registers->getV(y) > registers->getV(x)) {
+			registers->setV(0xf, 1);
+		}
+		else if (registers->getV(y) < registers->getV(x)
+			&& registers->getV(y) - registers->getV(x) < 0) {
+			registers->setV(0xf, 0);
+		}
+		registers->setV(x, ((registers->getV(y) - registers->getV(x)) % 256));
+	}
+}
