@@ -16,7 +16,6 @@ public:
 	void storeMemory(unsigned char* memory, int index, int size);
 	bool isPixelOn(int x, int y);
 	char convertKey(char key);
-
 private:
 	void jump(unsigned short opcode);
 	void returnFromSubroutine();
@@ -28,6 +27,7 @@ private:
 	void binaryXor(unsigned short opcode);
 	void carryAdd(unsigned short opcode);
 	void subtract(unsigned short opcode);
+	void shift(unsigned short opcode);
 	Memory* memory;
 	Register* registers;
 	Display* display;

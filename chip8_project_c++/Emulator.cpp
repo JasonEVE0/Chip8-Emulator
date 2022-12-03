@@ -75,10 +75,10 @@ void Emulator::execute(unsigned short instruction) {
 				binaryXor(instruction);
 			} else if ((instruction & 0xf) == 4) {
 				carryAdd(instruction);
-			} else if ((instruction & 0xf) == 5) {
-				carryAdd(instruction);
-			} else if ((instruction & 0xf) == 7) {
-				carryAdd(instruction);
+			} else if ((instruction & 0xf) == 5 || (instruction & 0xf) == 7) {
+				subtract(instruction);
+			} else if ((instruction & 0xf) == 6 || (instruction & 0xf) == 0xe) {
+				shift(instruction);
 			}
 			break;
 		case 0x9000:
@@ -218,3 +218,26 @@ void Emulator::subtract(unsigned short opcode) {
 		registers->setV(x, ((registers->getV(y) - registers->getV(x)) % 256));
 	}
 }
+
+void Emulator::shift(unsigned short opcode) {
+	unsigned short trailing = opcode & 0xf;
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short y = (opcode >> 4) & 0xf;
+	int bitShift = 0;
+
+	registers->setV(x, registers->getV(y));
+
+	if (trailing == 0x6) {
+		bitShift = (registers->getV(x) & 0x1);
+		registers->setV(x, (registers->getV(x) >> 1));
+	} else if (trailing == 0xe) {
+		registers->setV(x, (registers->getV(x) << 1));
+	}
+
+	if (bitShift == 0) {
+		registers->setV(0xf, 0);
+	} else if (bitShift == 1) {
+		registers->setV(0xf, 1);
+	}
+}
+
