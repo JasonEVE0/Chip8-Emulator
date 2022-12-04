@@ -14,6 +14,10 @@ public:
 	unsigned short getI();
 	void setV(unsigned char index, unsigned char value);
 	unsigned char getV(unsigned char index);
+	void setSoundTimer(unsigned char value);
+	unsigned char getSoundTimer();
+	void setDelayTimer(unsigned char value);
+	unsigned char getDelayTimer();
 private:
 	unsigned short PC;
 	unsigned short I;

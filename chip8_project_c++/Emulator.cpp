@@ -32,6 +32,8 @@ unsigned short Emulator::fetch() {
 
 // Decode and execute the instruction
 void Emulator::execute(unsigned short instruction) {
+	unsigned char trailingByte = (instruction) & 0xff;
+
 	switch (instruction & 0xf000) {
 		case 0x0000:
 			if ((instruction & 0xff) == 0xee){
@@ -95,10 +97,10 @@ void Emulator::execute(unsigned short instruction) {
 			display->draw(instruction, registers, memory);
 			break;
 		case 0xe000:
-			unsigned char trailingByte = (instruction) & 0xff;
 			if (trailingByte == 0x9E || trailingByte == 0xA1) {
 				keyboard->skipKey(registers, instruction);
 			}
+			break;
 		default:
 			printf("unknown instruction: %x\n", instruction);
 	}
@@ -269,3 +271,16 @@ void Emulator::random(unsigned short opcode) {
 	registers->setV(x, randomValue);
 }
 
+// FX07, FX15, FX18 - Timers
+void Emulator::timerModification(unsigned short opcode) {
+	unsigned short trailing = opcode & 0xff;
+	unsigned short x = (opcode >> 8) & 0xf;
+
+	if (trailing == 0x07) {
+		registers->setV(x, registers->getDelayTimer());
+	} else if (trailing == 0x15) {
+		registers->setDelayTimer(registers->getV(x));
+	} else if (trailing == 0x18) {
+		registers->setSoundTimer(registers->getV(x));
+	}
+}

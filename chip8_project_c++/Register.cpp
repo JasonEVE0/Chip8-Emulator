@@ -59,3 +59,19 @@ unsigned char Register::getV(unsigned char index) {
 unsigned short Register::getI() {
 	return this->I;
 }
+
+void Register::setSoundTimer(unsigned char value) {
+	this->soundTimer = value;
+}
+
+unsigned char Register::getSoundTimer() {
+	return this->soundTimer;
+}
+
+void Register::setDelayTimer(unsigned char value) {
+	this->delayTimer = value;
+}
+
+unsigned char Register::getDelayTimer() {
+	return this->delayTimer;
+}
