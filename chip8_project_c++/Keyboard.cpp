@@ -53,3 +53,18 @@ bool Keyboard::isPressed(char virtualKey) {
 	}
 	return false;
 }
+
+// EX9E, EXA1 - Skip key
+void Keyboard::skipKey(Register *registers, unsigned short opcode) {
+	unsigned short trailing = opcode & 0xff;
+	unsigned short x = (opcode >> 8) & 0xf;
+	bool isKeyPressed = isPressed(registers->getV(x));
+
+	if (trailing == 0x9E && isKeyPressed) {
+		registers->incrementPC();
+	}
+	else if (trailing == 0xA1 && !isKeyPressed) {
+		registers->incrementPC();
+	}
+}
+

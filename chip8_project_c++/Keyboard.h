@@ -2,6 +2,7 @@
 #define KEYBOARD_H
 
 #include <unordered_map>
+#include "Register.h"
 
 class Keyboard {
 public:
@@ -9,6 +10,7 @@ public:
 	void pressKey(char virtualKey);
 	void releaseKey(char virtualKey);
 	bool isPressed(char virtualKey);
+	void skipKey(Register *registers, unsigned short opcode);
 private:
 	std::unordered_map<char, bool> hashmap;
 };

@@ -41,9 +41,6 @@ void Emulator::execute(unsigned short instruction) {
 				display->clearScreen();
 			}
 			break;
-		case 0xd000:
-			display->draw(instruction, registers, memory);
-			break;
 		case 0x1000:
 			jump(instruction);
 			break;
@@ -94,6 +91,14 @@ void Emulator::execute(unsigned short instruction) {
 		case 0xc000:
 			random(instruction);
 			break;
+		case 0xd000:
+			display->draw(instruction, registers, memory);
+			break;
+		case 0xe000:
+			unsigned char trailingByte = (instruction) & 0xff;
+			if (trailingByte == 0x9E || trailingByte == 0xA1) {
+				keyboard->skipKey(registers, instruction);
+			}
 		default:
 			printf("unknown instruction: %x\n", instruction);
 	}
