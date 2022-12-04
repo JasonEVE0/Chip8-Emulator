@@ -17,6 +17,7 @@ public:
 	bool isPixelOn(int x, int y);
 	char convertKey(char key);
 private:
+	// instruction set
 	void jump(unsigned short opcode);
 	void returnFromSubroutine();
 	void jumpSubroutine(unsigned short opcode);
@@ -28,6 +29,8 @@ private:
 	void carryAdd(unsigned short opcode);
 	void subtract(unsigned short opcode);
 	void shift(unsigned short opcode);
+	void jumpWithOffset(unsigned short opcode);
+	void random(unsigned short opcode);
 	Memory* memory;
 	Register* registers;
 	Display* display;

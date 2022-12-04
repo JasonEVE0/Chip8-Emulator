@@ -1,5 +1,6 @@
 #include "Emulator.h"
 #include <iostream>
+#include <cstdlib>
 
 Emulator::Emulator() {
 	this->memory = new Memory();
@@ -86,6 +87,12 @@ void Emulator::execute(unsigned short instruction) {
 			break;
 		case 0xa000:
 			registers->setIndex(instruction);
+			break;
+		case 0xb000:
+			jumpWithOffset(instruction);
+			break;
+		case 0xc000:
+			random(instruction);
 			break;
 		default:
 			printf("unknown instruction: %x\n", instruction);
@@ -239,5 +246,21 @@ void Emulator::shift(unsigned short opcode) {
 	} else if (bitShift == 1) {
 		registers->setV(0xf, 1);
 	}
+}
+
+// BNNN - Jump with offset
+void Emulator::jumpWithOffset(unsigned short opcode) {
+	unsigned short nnn = opcode & 0xfff;
+	unsigned short target = nnn + registers->getV(0);
+	registers->setPC(target);
+}
+
+// CXNN - Random
+void Emulator::random(unsigned short opcode) {
+	unsigned short nn = opcode & 0xff;
+	unsigned short x = (opcode >> 8) & 0xf;
+	srand(time(0));
+	unsigned short randomValue = rand() & nn;
+	registers->setV(x, randomValue);
 }
 
