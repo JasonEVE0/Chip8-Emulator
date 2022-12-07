@@ -106,6 +106,8 @@ void Emulator::execute(unsigned short instruction) {
 				addToIndex(instruction);
 			} else if (trailingByte == 0x0A) {
 				getKey(instruction);
+			} else if (trailingByte == 0x29) {
+				fontCharacter(instruction);
 			}
 			break;
 		default:
@@ -309,6 +311,22 @@ void Emulator::getKey(unsigned short opcode) {
 				registers->setV(x, i);
 				return;
 			}
+		}
+	}
+}
+
+// FX29 - Font character
+void Emulator::fontCharacter(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned char hexaChar = registers->getV(x);
+	unsigned short memoryLocation = 0;
+
+	for (int i = 0; i < 16; i++) {
+		if (i == hexaChar) {
+			registers->setI(memoryLocation);
+			return;
+		} else {
+			memoryLocation += 5;
 		}
 	}
 }
