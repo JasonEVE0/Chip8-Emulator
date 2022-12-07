@@ -101,6 +101,11 @@ void Emulator::execute(unsigned short instruction) {
 				keyboard->skipKey(registers, instruction);
 			}
 			break;
+		case 0xf000:
+			if (trailingByte == 0x1E) {
+				addToIndex(instruction);
+			}
+			break;
 		default:
 			printf("unknown instruction: %x\n", instruction);
 	}
@@ -284,3 +289,10 @@ void Emulator::timerModification(unsigned short opcode) {
 		registers->setSoundTimer(registers->getV(x));
 	}
 }
+
+// FX1E - Add to index
+void Emulator::addToIndex(unsigned short opcode) {
+	unsigned short value = (opcode >> 8) & 0xf;
+	registers->setI(registers->getI() + value);
+}
+

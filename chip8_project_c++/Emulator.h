@@ -32,6 +32,7 @@ private:
 	void jumpWithOffset(unsigned short opcode);
 	void random(unsigned short opcode);
 	void timerModification(unsigned short opcode);
+	void addToIndex(unsigned short opcode);
 	Memory* memory;
 	Register* registers;
 	Display* display;

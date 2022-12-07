@@ -60,6 +60,10 @@ unsigned short Register::getI() {
 	return this->I;
 }
 
+void Register::setI(unsigned short value) {
+	this->I = value;
+}
+
 void Register::setSoundTimer(unsigned char value) {
 	this->soundTimer = value;
 }

@@ -11,6 +11,7 @@ public:
 	void setRegister(unsigned short opcode);
 	void addRegister(unsigned short opcode);
 	void setIndex(unsigned short opcode);
+	void setI(unsigned short value);
 	unsigned short getI();
 	void setV(unsigned char index, unsigned char value);
 	unsigned char getV(unsigned char index);
