@@ -47,10 +47,13 @@ int main(int argc, char* argv[]) {
 		if (event->type == SDL_KEYDOWN) {
 			char rKey = event->key.keysym.sym;
 			char vKey = emulator->convertKey(rKey);
+			emulator->pressKey(vKey);
+			printf("key pressed");
 		}
 
 		// fetch instruction
 		unsigned short instruction = emulator->fetch();
+
 
 		// execute instruction
 		emulator->execute(instruction);

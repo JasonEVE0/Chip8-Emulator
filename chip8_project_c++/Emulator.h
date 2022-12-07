@@ -16,6 +16,7 @@ public:
 	void storeMemory(unsigned char* memory, int index, int size);
 	bool isPixelOn(int x, int y);
 	char convertKey(char key);
+	void pressKey(char key);
 private:
 	// instruction set
 	void jump(unsigned short opcode);

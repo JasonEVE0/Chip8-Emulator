@@ -151,26 +151,34 @@ void Emulator::jumpSubroutine(unsigned short opcode) {
 void Emulator::skip(unsigned short opcode) {
 	unsigned short lead = (opcode >> 12) & 0xf;
 	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned short nn = (opcode) & 0xff;
 
-	if (lead == 0x3 || lead == 0x4) {
-		unsigned short nn = (opcode) & 0xff;
+	if (lead == 0x3) {
 		if (registers->getV(x) == nn) {
-			// skip instruction 3XNN
-			return;
-		}
-		else {
-			// skip instruction 4XNN
+			registers->incrementPC();
 			return;
 		}
 	}
-	else if (lead == 0x5 || lead == 0x9) {
-		unsigned short y = (opcode >> 4) & 0xf;
-		if (registers->getV(x) == registers->getV(y)) {
-			// skip instruction 5XY0
+
+	if (lead == 0x4) {
+		if (registers->getV(x) != nn) {
+			registers->incrementPC();
 			return;
 		}
-		else {
-			// skip instruction 9XY0
+	}
+
+	unsigned short y = (opcode >> 4) & 0xf;
+
+	if (lead == 0x5) {
+		if (registers->getV(x) == registers->getV(y)) {
+			registers->incrementPC();
+			return;
+		}
+	}
+
+	if (lead == 0x9) {
+		if (registers->getV(x) != registers->getV(y)) {
+			registers->incrementPC();
 			return;
 		}
 	}
@@ -315,6 +323,10 @@ void Emulator::getKey(unsigned short opcode) {
 			}
 		}
 	}
+}
+
+void Emulator::pressKey(char key) {
+	keyboard->pressKey(key);
 }
 
 // FX29 - Font character
