@@ -35,6 +35,7 @@ private:
 	void addToIndex(unsigned short opcode);
 	void getKey(unsigned short opcode);
 	void fontCharacter(unsigned short opcode);
+	void decimalConversion(unsigned short opcode);
 	Memory* memory;
 	Register* registers;
 	Display* display;

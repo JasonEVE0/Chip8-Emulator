@@ -108,6 +108,8 @@ void Emulator::execute(unsigned short instruction) {
 				getKey(instruction);
 			} else if (trailingByte == 0x29) {
 				fontCharacter(instruction);
+			} else if (trailingByte == 0x33) {
+				decimalConversion(instruction);
 			}
 			break;
 		default:
@@ -329,5 +331,21 @@ void Emulator::fontCharacter(unsigned short opcode) {
 			memoryLocation += 5;
 		}
 	}
+}
+
+// FX33 - Binary coded decimal conversion
+void Emulator::decimalConversion(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	unsigned char threeDigit = registers->getV(x);
+	unsigned char d1 = (threeDigit / 100);
+	unsigned char d2 = (threeDigit / 10) % 10;
+	unsigned char d3 = (threeDigit % 10);
+	unsigned short memoryLocation = registers->getI();
+	unsigned char* memoryBlock1 = new unsigned char[1] {d1};
+	unsigned char* memoryBlock2 = new unsigned char[1] {d2};
+	unsigned char* memoryBlock3 = new unsigned char[1] {d3};
+	memory->storeMemory(memoryBlock1, memoryLocation, 1);
+	memory->storeMemory(memoryBlock2, memoryLocation + 1, 1);
+	memory->storeMemory(memoryBlock3, memoryLocation + 2, 1);
 }
 
