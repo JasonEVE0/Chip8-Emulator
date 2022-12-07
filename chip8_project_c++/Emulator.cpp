@@ -349,3 +349,27 @@ void Emulator::decimalConversion(unsigned short opcode) {
 	memory->storeMemory(memoryBlock3, memoryLocation + 2, 1);
 }
 
+// FX55 - Store memory instruction
+void Emulator::storeMemoryInstruction(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	int count = x;
+
+	for (int i = 0; i <= count; i++) {
+		unsigned char memoryV = registers->getV(i);
+		unsigned char* memoryBlock = new unsigned char[1] {memoryV};
+		unsigned short memoryLocation = registers->getI() + i;
+		memory->storeMemory(memoryBlock, memoryLocation, 1);
+	}
+}
+
+// FX65 - Load memory instruction
+void Emulator::loadMemoryInstruction(unsigned short opcode) {
+	unsigned short x = (opcode >> 8) & 0xf;
+	int count = x;
+
+	for (int i = 0; i <= count; i++) {
+		unsigned short indexValue = registers->getI();
+		unsigned char memoryCell = memory->getMemoryCell(indexValue + i);
+		registers->setV(i, memoryCell);
+	}
+}

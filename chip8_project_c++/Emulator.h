@@ -36,6 +36,8 @@ private:
 	void getKey(unsigned short opcode);
 	void fontCharacter(unsigned short opcode);
 	void decimalConversion(unsigned short opcode);
+	void storeMemoryInstruction(unsigned short opcode);
+	void loadMemoryInstruction(unsigned short opcode);
 	Memory* memory;
 	Register* registers;
 	Display* display;
