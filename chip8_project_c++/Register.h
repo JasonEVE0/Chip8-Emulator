@@ -7,6 +7,7 @@ public:
 	~Register();
 	unsigned short fetchPC();
 	void incrementPC();
+	void decrementPC();
 	void setPC(unsigned short counter);
 	void setRegister(unsigned short opcode);
 	void addRegister(unsigned short opcode);

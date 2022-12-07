@@ -68,3 +68,11 @@ void Keyboard::skipKey(Register *registers, unsigned short opcode) {
 	}
 }
 
+bool Keyboard::anyKeyPressed() {
+	for (auto& iterator : hashmap) {
+		if (iterator.second) {
+			return true;
+		}
+	}
+	return false;
+}

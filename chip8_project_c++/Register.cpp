@@ -24,6 +24,10 @@ void Register::incrementPC() {
 	this->PC += 2;
 }
 
+void Register::decrementPC() {
+	this->PC -= 2;
+}
+
 // Set - 6XNN
 void Register::setRegister(unsigned short opcode) {
 	unsigned char x = (opcode >> 8) & 0x0f;

@@ -104,6 +104,8 @@ void Emulator::execute(unsigned short instruction) {
 		case 0xf000:
 			if (trailingByte == 0x1E) {
 				addToIndex(instruction);
+			} else if (trailingByte == 0x0A) {
+				getKey(instruction);
 			}
 			break;
 		default:
@@ -294,5 +296,20 @@ void Emulator::timerModification(unsigned short opcode) {
 void Emulator::addToIndex(unsigned short opcode) {
 	unsigned short value = (opcode >> 8) & 0xf;
 	registers->setI(registers->getI() + value);
+}
+
+// FX0A - Get key
+void Emulator::getKey(unsigned short opcode) {
+	if (!keyboard->anyKeyPressed()) {
+		registers->decrementPC();
+	} else {
+		unsigned short x = (opcode >> 8) & 0xf;
+		for (int i = 0; i < 16; i++) {
+			if (keyboard->isPressed(i)) {
+				registers->setV(x, i);
+				return;
+			}
+		}
+	}
 }
 

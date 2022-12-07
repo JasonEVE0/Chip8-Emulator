@@ -11,6 +11,7 @@ public:
 	void releaseKey(char virtualKey);
 	bool isPressed(char virtualKey);
 	void skipKey(Register *registers, unsigned short opcode);
+	bool anyKeyPressed();
 private:
 	std::unordered_map<char, bool> hashmap;
 };
