@@ -48,7 +48,6 @@ int main(int argc, char* argv[]) {
 			char rKey = event->key.keysym.sym;
 			char vKey = emulator->convertKey(rKey);
 			emulator->pressKey(vKey);
-			printf("key pressed");
 		}
 
 		// fetch instruction

@@ -110,6 +110,10 @@ void Emulator::execute(unsigned short instruction) {
 				fontCharacter(instruction);
 			} else if (trailingByte == 0x33) {
 				decimalConversion(instruction);
+			} else if (trailingByte == 0x55) {
+				storeMemoryInstruction(instruction);
+			} else if (trailingByte == 0x65) {
+				loadMemoryInstruction(instruction);
 			}
 			break;
 		default:
